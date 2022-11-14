@@ -6,6 +6,9 @@ from pygame import Vector2
 class Button(pygame.sprite.Sprite):
     def __init__(self, x: float, y: float, text: str, onclick: object, game, width=None, height=None, background_color=(173, 78, 228), text_color=(255,255,255)):
         super().__init__()
+        self.width = width
+        self.height = height
+
         self.game = game
         self.font = game.default_font
         self.text = text
@@ -54,7 +57,19 @@ class Button(pygame.sprite.Sprite):
     def set_text(self, text: str):
         self.text = text
         self.text_surface = self.font.render(self.text, False, self.text_color)
-        self.rect = self.text_surface.get_rect()
-        self.background_rect = self.rect.inflate(10, 10)
+        self.rect: pygame.rect.Rect = self.text_surface.get_rect()
+
+
+        self.background_rect = self.rect.copy()
+
+        if self.width:
+            self.background_rect.width = self.width
+        
+        if self.height:
+            self.background_rect.height = self.height
+
+        self.background_rect = self.background_rect.inflate(10, 10)
+
+        
         self.rect.center = self.pos
         self.background_rect.center = self.pos

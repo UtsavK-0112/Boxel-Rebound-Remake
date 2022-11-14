@@ -4,6 +4,7 @@ import os
 import sys
 from settings import *
 from time import time
+from states.level import Level
 from states.start_menu import StartMenu
 from debug import Debug
 
@@ -15,7 +16,7 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
         self.clock = pygame.time.Clock()
-        self.dt, self.prev_time = 0, 0
+        self.dt, self.prev_time = 0, time()
 
         self.show_debug = False
 
@@ -25,8 +26,7 @@ class Game:
         self.load_assets()
         self.load_state()
 
-        self.debug = Debug(self)
-        
+        self.debug = Debug(self)  
 
 
     def run(self):
@@ -34,10 +34,11 @@ class Game:
             self.print_debug()
 
             self.get_dt()
-            self.clock.tick(FPS)
             self.handle_events()
             self.update()
             self.render()
+            self.clock.tick(FPS)
+
 
     def print_debug(self):
         self.debug.print(f"FPS: {int(self.clock.get_fps())}")
@@ -83,7 +84,7 @@ class Game:
         return self.dt
 
     def load_state(self):
-        start_menu = StartMenu(self)
+        start_menu = Level(self)
         self.state_stack.append(start_menu)
     
     def load_assets(self):
